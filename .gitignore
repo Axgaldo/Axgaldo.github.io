@@ -1,0 +1,12 @@
+# Dependencias y artefactos
+node_modules/
+dist/
+coverage/
+
+# Informes de pruebas
+test-results/
+playwright-report/
+
+# Entorno
+.env
+.env.*

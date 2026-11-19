@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es" data-phosphor="white">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AxGaldo · Lobby CRT</title>
+  <meta name="description" content="Lobby tipo consola CRT con todas las GitHub Pages de AxGaldo (Antonio Galdó Seiquer).">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <h1 class="sr-only">AxGaldo — lobby de GitHub Pages</h1>
+
+  <main class="stage">
+    <!-- Monitor CRT: pantalla abombada + consola que se escribe sola -->
+    <section class="monitor" aria-label="Consola CRT">
+      <div class="screen">
+        <div class="console" id="console">
+          <noscript>
+            <p class="noscript">
+              Este lobby necesita JavaScript.<br>
+              Puedes ver mis páginas en
+              <a href="https://github.com/AxGaldo?tab=repositories">github.com/AxGaldo</a>.
+            </p>
+          </noscript>
+          <div id="console-boot"></div>
+          <div id="console-project"></div>
+        </div>
+        <div class="fx fx-scanlines" aria-hidden="true"></div>
+        <div class="fx fx-sweep" aria-hidden="true"></div>
+        <div class="fx fx-glare" aria-hidden="true"></div>
+        <div class="fx fx-vignette" aria-hidden="true"></div>
+      </div>
+
+      <div class="bezel-bar">
+        <span class="brand">AXGALDO · CRT-88</span>
+        <div class="controls">
+          <span class="led" aria-hidden="true"></span>
+          <button id="phosphor-btn" class="bezel-btn" type="button" aria-pressed="false"
+                  title="Cambiar fósforo (blanco / verde)">FÓSFORO</button>
+        </div>
+        <a class="license" href="https://github.com/AxGaldo/Axgaldo.github.io"
+           target="_blank" rel="noopener noreferrer">MIT</a>
+      </div>
+    </section>
+
+    <!-- Carrusel: pila vertical 3D en escritorio, tira horizontal con flechas en móvil -->
+    <aside class="carousel-wrap" aria-label="Proyectos">
+      <button id="carousel-prev" class="arrow arrow-prev" type="button" aria-label="Proyecto anterior">‹</button>
+      <div class="carousel" id="carousel"></div>
+      <button id="carousel-next" class="arrow arrow-next" type="button" aria-label="Proyecto siguiente">›</button>
+    </aside>
+  </main>
+
+  <!-- Espejo accesible: el texto se anuncia completo al terminar de escribirse -->
+  <p class="sr-only" id="sr-console" aria-live="polite"></p>
+
+  <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>
