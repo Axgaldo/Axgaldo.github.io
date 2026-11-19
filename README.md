@@ -8,6 +8,8 @@
 Lobby tipo **consola CRT** con todas las GitHub Pages de
 [AxGaldo (Antonio Galdó Seiquer)](https://github.com/AxGaldo).
 
+![Lobby CRT — vista de escritorio](docs/screenshot.png)
+
 - **Escritorio**: a la izquierda, un monitor de tubo con pantalla
   abombada, scanlines y reflejos; su consola escribe los datos del
   proyecto seleccionado. A la derecha, un carrusel vertical
