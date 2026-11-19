@@ -1,0 +1,36 @@
+{
+  "name": "axgaldo-lobby",
+  "version": "1.0.0",
+  "description": "Lobby tipo consola CRT con todas las GitHub Pages de AxGaldo (Antonio Galdó Seiquer).",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "author": {
+    "name": "Antonio Galdó Seiquer",
+    "url": "https://github.com/AxGaldo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AxGaldo/Axgaldo.github.io.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "http-server . -p 4173 --silent -a 127.0.0.1 -c-1",
+    "build": "node scripts/build.mjs",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.1",
+    "eslint": "^10.15.0",
+    "globals": "^17.14.0",
+    "http-server": "^14.1.1",
+    "jsdom": "^31.0.1",
+    "vitest": "^5.1.1"
+  }
+}
