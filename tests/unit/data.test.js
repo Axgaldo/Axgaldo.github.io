@@ -8,6 +8,16 @@ describe('SITE', () => {
     expect(SITE.user.githubUrl).toBe('https://github.com/AxGaldo');
   });
 
+  it('la bio está definida y menciona la especialización', () => {
+    expect(typeof SITE.user.bio).toBe('string');
+    expect(SITE.user.bio).toContain('Ciberseguridad');
+    expect(SITE.user.bio).toContain('CompTIA Security+');
+  });
+
+  it('el sonido por defecto es un booleano', () => {
+    expect(typeof SITE.sound).toBe('boolean');
+  });
+
   it('la versión sigue semver', () => {
     expect(SITE.version).toMatch(/^\d+\.\d+\.\d+$/);
   });

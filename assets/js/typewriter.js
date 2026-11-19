@@ -13,13 +13,15 @@ const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
 
 /**
  * @param {HTMLElement} root contenedor donde vive el cursor compartido.
- * @param {{ baseDelay?: number, jitter?: number }} [options] ritmo
- *   base (ms) y variación aleatoria por carácter.
+ * @param {{ baseDelay?: number, jitter?: number, onCharacter?: () => void }} [options]
+ *   ritmo base (ms), variación aleatoria por carácter y callback que
+ *   se dispara con cada carácter escrito (p. ej. para el sonido).
  */
 export class Typewriter {
-  constructor(root, { baseDelay = 10, jitter = 8 } = {}) {
+  constructor(root, { baseDelay = 10, jitter = 8, onCharacter } = {}) {
     this.baseDelay = baseDelay;
     this.jitter = jitter;
+    this.onCharacter = typeof onCharacter === 'function' ? onCharacter : null;
     this.gen = 0;
     this.reduced =
       typeof window !== 'undefined' && typeof window.matchMedia === 'function'
@@ -93,6 +95,7 @@ export class Typewriter {
       if (this.gen !== gen) return false;
       el.append(char);
       el.closest('.line')?.appendChild(this.cursor);
+      this.onCharacter?.();
       await new Promise((resolve) => setTimeout(resolve, delay));
     }
     return this.gen === gen;

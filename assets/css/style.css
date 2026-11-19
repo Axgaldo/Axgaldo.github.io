@@ -210,9 +210,21 @@ button {
   white-space: pre-line;
 }
 
-/* Mascota: arte lineal al color del fósforo, fija en la esquina
-   inferior del tubo (la consola reserva hueco para no escribir
-   debajo) */
+/* Reloj en vivo, esquina superior derecha del tubo */
+.clock {
+  position: absolute;
+  top: clamp(14px, 2.2vw, 28px);
+  right: clamp(20px, 3vw, 46px);
+  z-index: 4;
+  font-size: clamp(11px, 1.1vw, 13px);
+  letter-spacing: 0.14em;
+  color: var(--phosphor-dim);
+  text-shadow: 0 0 8px var(--glow);
+  pointer-events: none;
+}
+
+/* Mascota: arte de tinta recortado como máscara, de modo que sus
+   líneas heredan el color del fósforo (verde o blanco) */
 .mascot {
   position: absolute;
   right: clamp(20px, 3.5vw, 52px);
@@ -226,11 +238,17 @@ button {
   opacity: 1;
 }
 
-.mascot svg {
-  width: clamp(150px, 18vw, 210px);
-  height: auto;
-  color: var(--phosphor);
-  filter: drop-shadow(0 0 8px var(--glow));
+.mascot-art {
+  width: clamp(150px, 19vw, 225px);
+  aspect-ratio: 426 / 640;
+  background-color: var(--phosphor);
+  -webkit-mask-image: url("../img/vault-boy.png");
+  mask-image: url("../img/vault-boy.png");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  filter: drop-shadow(0 0 10px var(--glow));
   animation: floaty 6s ease-in-out infinite;
 }
 
@@ -539,15 +557,6 @@ button {
     font-size: 12.5px;
   }
 
-  .bezel-bar {
-    padding-top: 8px;
-  }
-
-  .brand {
-    font-size: 10px;
-    letter-spacing: 0.22em;
-  }
-
   .carousel-wrap {
     height: 205px;
   }
@@ -573,7 +582,7 @@ button {
     animation-duration: 4s;
   }
 
-  .mascot svg {
+  .mascot-art {
     width: clamp(95px, 26vw, 125px);
   }
 
@@ -586,6 +595,27 @@ button {
 
   .mascot.on {
     opacity: 0.85;
+  }
+
+  /* Bisel: tres botones necesitan sitio */
+  .bezel-bar {
+    gap: 8px;
+    padding-top: 8px;
+  }
+
+  .controls {
+    gap: 6px;
+  }
+
+  .brand {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+  }
+
+  .bezel-btn {
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    padding: 5px 8px;
   }
 
   .arrow {
@@ -620,6 +650,17 @@ button {
   .arrow-next { right: 0; }
 }
 
+/* Teléfonos estrechos: la marca del bisel cede el sitio a los botones */
+@media (max-width: 460px) {
+  .brand {
+    display: none;
+  }
+
+  .bezel-bar {
+    justify-content: space-between;
+  }
+}
+
 /* --- Accesibilidad: menos movimiento ------------------------ */
 
 @media (prefers-reduced-motion: reduce) {
@@ -628,7 +669,7 @@ button {
   .fx-sweep,
   .card::after,
   .card-inner,
-  .mascot svg,
+  .mascot-art,
   .cursor {
     animation: none !important;
   }

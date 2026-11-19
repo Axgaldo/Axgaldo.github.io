@@ -14,7 +14,9 @@ Lobby tipo **consola CRT** con todas las GitHub Pages de
   **holográfico 3D** con las Pages (clic, rueda del ratón o flechas).
 - **Móvil**: tus datos arriba, los datos del proyecto debajo y el
   carrusel horizontal abajo, con flechitas ‹ › y deslizamiento táctil.
-- **Fósforo blanco o verde** con el botón `FÓSFORO` del bisel.
+- **Fósforo blanco o verde** con el botón `FÓSFORO` del bisel; `SONIDO`
+  silencia el teletipo y `SOBRE MÍ` escribe la bio en la consola.
+  El reloj de la esquina corre en vivo.
 
 ## Cómo se llena el lobby
 
@@ -72,6 +74,12 @@ GitHub Pages. Configuración única:
 
 El versionado es SemVer; cada release lleva su etiqueta (`v1.0.0`…)
 y su entrada en el [CHANGELOG](CHANGELOG.md).
+
+## Créditos
+
+Vault Boy (la mascota del lobby) es propiedad de **Bethesda Softworks**
+(serie *Fallout*); se usa como homenaje de fan, sin ánimo comercial.
+El resto del sitio es código abierto bajo MIT.
 
 ## Licencia
 

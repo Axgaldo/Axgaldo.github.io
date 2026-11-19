@@ -8,6 +8,7 @@
 
 import { MANUAL_PROJECTS, SITE } from './data.js';
 import { fetchGithubProjects, mergeProjects } from './github.js';
+import { Sound } from './sound.js';
 import { Typewriter } from './typewriter.js';
 import { Carousel } from './carousel.js';
 
@@ -18,12 +19,23 @@ const bootEl = $('#console-boot');
 const projEl = $('#console-project');
 const srMirror = $('#sr-console');
 const phosphorBtn = $('#phosphor-btn');
+const soundBtn = $('#sound-btn');
+const aboutBtn = $('#about-btn');
 
-const tw = new Typewriter(consoleEl);
+/** Estado de sonido inicial: lo guardado manda; si no, SITE.sound. */
+const initialSoundEnabled = () => {
+  const saved = localStorage.getItem('axgaldo.sound');
+  return (saved ?? (SITE.sound ? 'on' : 'off')) === 'on';
+};
+
+const sound = new Sound({ enabled: initialSoundEnabled() });
+const tw = new Typewriter(consoleEl, { onCharacter: () => sound.blip() });
 const carousel = new Carousel($('#carousel'), { onSelect: showProject });
 
 /** Token para ignorar escrituras de proyecto ya sustituidas. */
 let showToken = 0;
+/** Qué se está escribiendo en la zona de proyecto: 'project' | 'about'. */
+let zone = 'project';
 
 /* --- Ayudas para describir líneas de consola ------------------ */
 
@@ -119,6 +131,10 @@ function projectLines(project, index, total) {
       ),
     ),
   ];
+  const tech = [project.language, ...(project.topics ?? [])].filter(Boolean).join(' · ');
+  if (tech) {
+    lines.push(line(text(`  tecno        : ${tech}`)));
+  }
   if (project.repoUrl) {
     lines.push(
       line(
@@ -156,10 +172,45 @@ async function loadAuto() {
   }
 }
 
+/* --- Bloque "sobre mí" ------------------------------------------ */
+
+function aboutLines() {
+  const width = measureBoxWidth();
+  const top = '┌─[ sobre mí ]';
+  const lines = [
+    { segments: [{ text: top + '─'.repeat(width - top.length - 1) + '┐', speed: 2 }], className: 'frame' },
+  ];
+  for (const paragraph of SITE.user.bio.split('\n')) {
+    if (!paragraph.trim()) {
+      lines.push(line(text('')));
+      continue;
+    }
+    for (const row of wrapText(paragraph, width - 4)) {
+      lines.push(line(text(row)));
+    }
+  }
+  lines.push({
+    segments: [{ text: '└' + '─'.repeat(width - 2) + '┘', speed: 2 }],
+    className: 'frame',
+  });
+  return lines;
+}
+
+async function showAbout() {
+  if (zone === 'about') return;
+  zone = 'about';
+  const token = ++showToken;
+  tw.clear(projEl);
+  const lines = aboutLines();
+  const done = await tw.typeLines(projEl, lines);
+  if (done && token === showToken) mirror(plainText(lines));
+}
+
 /* --- Muestra el proyecto seleccionado en la consola ------------- */
 
 async function showProject(project, index) {
   const token = ++showToken;
+  zone = 'project';
   tw.clear(projEl);
   const lines = project
     ? projectLines(project, index, carousel.projects.length)
@@ -168,12 +219,37 @@ async function showProject(project, index) {
   if (done && token === showToken) mirror(plainText(lines));
 }
 
+/* --- Reloj -------------------------------------------------------- */
+
+function startClock() {
+  const clockEl = $('#clock');
+  const tick = () => {
+    clockEl.textContent = new Date().toLocaleTimeString('es-ES', { hour12: false });
+  };
+  tick();
+  setInterval(tick, 1000);
+}
+
 /* --- Interfaz ---------------------------------------------------- */
+
+function syncSoundBtn() {
+  soundBtn.setAttribute('aria-pressed', String(sound.enabled));
+}
 
 function bindUI() {
   phosphorBtn.addEventListener('click', () => {
     const next = document.documentElement.dataset.phosphor === 'white' ? 'green' : 'white';
     applyPhosphor(next, { persist: true });
+  });
+
+  soundBtn.addEventListener('click', () => {
+    sound.setEnabled(!sound.enabled);
+    localStorage.setItem('axgaldo.sound', sound.enabled ? 'on' : 'off');
+    syncSoundBtn();
+  });
+
+  aboutBtn.addEventListener('click', () => {
+    showAbout();
   });
 
   $('#carousel-prev').addEventListener('click', () => carousel.prev());
@@ -194,6 +270,8 @@ function bindUI() {
 
 async function init() {
   initPhosphor();
+  syncSoundBtn();
+  startClock();
   bindUI();
 
   // El escaneo de la API arranca en paralelo al texto de arranque.
@@ -213,7 +291,7 @@ async function init() {
   await tw.typeLines(bootEl, [
     state === 'ok' ? line(text(report)) : { segments: [text(report)], className: 'dim' },
     line(text('')),
-    { segments: [text('ayuda   : [↑↓ / ←→] cambiar · [rueda/deslizar] explorar')], className: 'dim' },
+    { segments: [text('ayuda   : [↑↓/←→/rueda] cambiar · [SOBRE MÍ] bio')], className: 'dim' },
     {
       segments: [
         text('código  : '),

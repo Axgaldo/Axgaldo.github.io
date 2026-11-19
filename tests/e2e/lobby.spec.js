@@ -22,6 +22,8 @@ const REPOS = [
     html_url: 'https://github.com/AxGaldo/Proyecto-Uno',
     homepage: null,
     pushed_at: '2026-11-18T00:00:00Z',
+    language: 'TypeScript',
+    topics: ['dbt', 'snowflake'],
   },
   {
     name: 'proyecto-dos',
@@ -84,6 +86,63 @@ test('al cambiar de proyecto la consola se reescribe', async ({ page }) => {
   await expect(page.locator('#console-project')).toContainText('dos.ejemplo.com', {
     timeout: TYPING_TIMEOUT,
   });
+});
+
+test('muestra lenguaje y topics del proyecto', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.card').nth(2)).toBeVisible({ timeout: TYPING_TIMEOUT });
+  await page.locator('.card').nth(2).click();
+  const block = page.locator('#console-project');
+  await expect(block).toContainText('tecno', { timeout: TYPING_TIMEOUT });
+  await expect(block).toContainText('TypeScript');
+  await expect(block).toContainText('dbt');
+});
+
+test('el botón SOBRE MÍ escribe la bio y un proyecto la sustituye', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.card').first()).toBeVisible({ timeout: TYPING_TIMEOUT });
+
+  await page.locator('#about-btn').click();
+  await expect(page.locator('#console-project')).toContainText('sobre mí', {
+    timeout: TYPING_TIMEOUT,
+  });
+  await expect(page.locator('#console-project')).toContainText('CompTIA Security+', {
+    timeout: 25_000,
+  });
+
+  // Al seleccionar otro proyecto, la bio se sustituye por el proyecto.
+  await page.locator('.card').nth(1).click();
+  await expect(page.locator('#console-project')).toContainText('título', {
+    timeout: TYPING_TIMEOUT,
+  });
+  await expect(page.locator('#console-project')).not.toContainText('CompTIA Security+', {
+    timeout: TYPING_TIMEOUT,
+  });
+});
+
+test('el reloj corre en la esquina del tubo', async ({ page }) => {
+  await page.goto('/');
+  const clock = page.locator('.clock');
+  await expect(clock).toHaveText(/^\d{2}:\d{2}:\d{2}$/);
+  const before = await clock.textContent();
+  await page.waitForTimeout(1500);
+  const after = await clock.textContent();
+  expect(after).toMatch(/^\d{2}:\d{2}:\d{2}$/);
+  expect(after).not.toBe(before);
+});
+
+test('el botón SONIDO mutea y persiste', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#sound-btn')).toHaveAttribute('aria-pressed', 'true');
+
+  await page.locator('#sound-btn').click();
+  await expect(page.locator('#sound-btn')).toHaveAttribute('aria-pressed', 'false');
+
+  await page.reload();
+  await expect(page.locator('#sound-btn')).toHaveAttribute('aria-pressed', 'false');
+
+  await page.locator('#sound-btn').click();
+  await expect(page.locator('#sound-btn')).toHaveAttribute('aria-pressed', 'true');
 });
 
 test('flechas móviles cambian de proyecto', async ({ page }) => {

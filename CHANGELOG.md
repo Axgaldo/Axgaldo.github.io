@@ -3,6 +3,19 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/),
 versionado con [SemVer](https://semver.org/lang/es/).
 
+## [1.2.0] — 2026-11-19
+
+### Added
+
+- Bloque de proyecto con línea `tecno`: lenguaje principal y topics
+  del repo (etiquetas de GitHub).
+- Botón `SOBRE MÍ` en el bisel: la consola escribe la bio completa.
+- Reloj en vivo en la esquina superior del tubo.
+- Sonido de teletipo sintetizado con Web Audio y botón `SONIDO`
+  (mute) con persistencia.
+- Mascota Vault Boy real (recorte de arte monocromo como máscara al
+  color del fósforo). Nota: el personaje es de Bethesda Softworks.
+
 ## [1.1.0] — 2026-11-19
 
 ### Added

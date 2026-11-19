@@ -47,6 +47,8 @@ describe('repoToProject', () => {
     html_url: 'https://github.com/AxGaldo/chinese-vault',
     homepage: null,
     pushed_at: '2026-11-19T00:45:41Z',
+    language: 'TypeScript',
+    topics: ['chino', 'hsk'],
   };
 
   it('mapea los campos del repo al formato del lobby', () => {
@@ -58,6 +60,8 @@ describe('repoToProject', () => {
       url: 'https://axgaldo.github.io/chinese-vault/',
       repoUrl: 'https://github.com/AxGaldo/chinese-vault',
       updatedAt: '2026-11-19',
+      language: 'TypeScript',
+      topics: ['chino', 'hsk'],
     });
   });
 
@@ -65,6 +69,8 @@ describe('repoToProject', () => {
     const project = repoToProject('AxGaldo', { name: 'x' });
     expect(project.description).toBe('');
     expect(project.updatedAt).toBe('');
+    expect(project.language).toBe('');
+    expect(project.topics).toEqual([]);
   });
 });
 

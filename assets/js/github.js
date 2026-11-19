@@ -39,6 +39,8 @@ export function repoToProject(user, repo) {
     url: pagesUrl(user, repo),
     repoUrl: typeof repo.html_url === 'string' ? repo.html_url : '',
     updatedAt: typeof repo.pushed_at === 'string' ? repo.pushed_at.slice(0, 10) : '',
+    language: typeof repo.language === 'string' ? repo.language : '',
+    topics: Array.isArray(repo.topics) ? repo.topics.slice(0, 8) : [],
   };
 }
 
