@@ -72,7 +72,8 @@ function initPhosphor() {
     applyPhosphor(param);
     return;
   }
-  applyPhosphor(localStorage.getItem('axgaldo.phosphor') === 'green' ? 'green' : 'white');
+  // Por defecto, fósforo verde; el blanco solo si se guardó a mano.
+  applyPhosphor(localStorage.getItem('axgaldo.phosphor') === 'white' ? 'white' : 'green');
 }
 
 /* --- Bloques de la consola -------------------------------------- */
@@ -146,12 +147,12 @@ function projectLines(project, index, total) {
 /* --- Carga de proyectos ---------------------------------------- */
 
 async function loadAuto() {
-  if (!SITE.autoDetect) return { auto: [], state: 'off' };
+  if (!SITE.autoDetect) return { projects: [], repoCount: 0, state: 'off' };
   try {
-    const auto = await fetchGithubProjects(SITE.user.github);
-    return { auto, state: 'ok' };
+    const { projects, repoCount } = await fetchGithubProjects(SITE.user.github);
+    return { projects, repoCount, state: 'ok' };
   } catch (error) {
-    return { auto: [], state: 'error', message: error.message };
+    return { projects: [], repoCount: 0, state: 'error', message: error.message };
   }
 }
 
@@ -198,8 +199,9 @@ async function init() {
   // El escaneo de la API arranca en paralelo al texto de arranque.
   const scan = loadAuto();
   await tw.typeLines(bootEl, bootLines());
+  document.querySelector('.mascot')?.classList.add('on');
 
-  const { auto, state, message } = await scan;
+  const { projects: auto, repoCount, state, message } = await scan;
   const projects = mergeProjects(MANUAL_PROJECTS, auto);
 
   const report =
@@ -207,9 +209,19 @@ async function init() {
       ? 'pages   : detección automática desactivada · modo manual'
       : state === 'error'
         ? `pages   : escaneo no disponible (${message}) · modo manual`
-        : `pages   : ${auto.length} detectadas · ${projects.length} en el lobby`;
+        : `pages   : ${auto.length} detectadas de ${repoCount} repos · ${projects.length} en el lobby`;
   await tw.typeLines(bootEl, [
     state === 'ok' ? line(text(report)) : { segments: [text(report)], className: 'dim' },
+    line(text('')),
+    { segments: [text('ayuda   : [↑↓ / ←→] cambiar · [rueda/deslizar] explorar')], className: 'dim' },
+    {
+      segments: [
+        text('código  : '),
+        link('github.com/AxGaldo/Axgaldo.github.io', 'https://github.com/AxGaldo/Axgaldo.github.io'),
+        text(' · MIT'),
+      ],
+      className: 'dim',
+    },
   ]);
 
   carousel.setProjects(projects);

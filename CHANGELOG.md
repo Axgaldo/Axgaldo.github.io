@@ -3,6 +3,21 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/),
 versionado con [SemVer](https://semver.org/lang/es/).
 
+## [1.1.0] — 2026-11-19
+
+### Added
+
+- Mascota tipo Vault Boy (pulgar arriba) dibujada en SVG con líneas
+  al color del fósforo, bajo el bloque del proyecto.
+- El arranque informa de cuántos repos públicos se han escaneado.
+- Líneas de ayuda (controles) y de código/licencia en la consola.
+
+### Changed
+
+- El fósforo **verde** pasa a ser el tema por defecto.
+- Tarjetas del carrusel más grandes (más alto, descripción de 3
+  líneas) en escritorio y móvil.
+
 ## [1.0.0] — 2026-11-19
 
 ### Added

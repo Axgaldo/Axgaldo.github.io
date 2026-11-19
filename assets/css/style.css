@@ -7,21 +7,22 @@
 /* --- Tokens ----------------------------------------------- */
 
 :root {
+  /* Fósforo verde P1 por defecto */
   --bg: #000;
-  --screen-bg: #05070a;
-  --phosphor: #f2f2f2;
-  --phosphor-dim: #8b949e;
-  --glow: rgb(240 240 240 / 0.35);
+  --screen-bg: #02120a;
+  --phosphor: #3dff7c;
+  --phosphor-dim: #23a85c;
+  --glow: rgb(61 255 124 / 0.42);
   --bezel: #1a1a1e;
   --font-mono: ui-monospace, "Cascadia Mono", "JetBrains Mono",
     Consolas, "Courier New", monospace;
 }
 
-html[data-phosphor="green"] {
-  --screen-bg: #02120a;
-  --phosphor: #3dff7c;
-  --phosphor-dim: #23a85c;
-  --glow: rgb(61 255 124 / 0.42);
+html[data-phosphor="white"] {
+  --screen-bg: #05070a;
+  --phosphor: #f2f2f2;
+  --phosphor-dim: #8b949e;
+  --glow: rgb(240 240 240 / 0.35);
 }
 
 /* --- Base -------------------------------------------------- */
@@ -134,7 +135,8 @@ button {
   position: absolute;
   inset: 0;
   overflow-y: auto;
-  padding: clamp(20px, 4vw, 52px) clamp(22px, 4.5vw, 56px);
+  padding: clamp(20px, 4vw, 52px) clamp(22px, 4.5vw, 56px)
+    clamp(170px, 27vh, 250px);
   font-size: clamp(12px, 1.35vw, 15px);
   line-height: 1.55;
   animation: flicker 9s infinite;
@@ -206,6 +208,30 @@ button {
 .noscript {
   margin: 0;
   white-space: pre-line;
+}
+
+/* Mascota: arte lineal al color del fósforo, fija en la esquina
+   inferior del tubo (la consola reserva hueco para no escribir
+   debajo) */
+.mascot {
+  position: absolute;
+  right: clamp(20px, 3.5vw, 52px);
+  bottom: clamp(16px, 3vh, 34px);
+  opacity: 0;
+  transition: opacity 1.2s ease 0.4s;
+  pointer-events: none;
+}
+
+.mascot.on {
+  opacity: 1;
+}
+
+.mascot svg {
+  width: clamp(150px, 18vw, 210px);
+  height: auto;
+  color: var(--phosphor);
+  filter: drop-shadow(0 0 8px var(--glow));
+  animation: floaty 6s ease-in-out infinite;
 }
 
 /* --- Efectos de pantalla (overlays) -------------------------- */
@@ -354,7 +380,7 @@ button {
 .carousel {
   position: relative;
   width: 100%;
-  height: min(58vh, 500px);
+  height: min(60vh, 520px);
   transform-style: preserve-3d;
   /* El contenedor es un plano en z=0 que taparía el hit-test de las
      tarjetas hundidas (z<0): se ignora y las tarjetas capturan solas.
@@ -366,11 +392,11 @@ button {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: min(88%, 300px);
-  padding: 13px 15px;
+  width: min(92%, 330px);
+  padding: 16px 18px;
   translate: -50% -50%;
   pointer-events: auto;
-  transform: translateY(calc(var(--d) * 78px))
+  transform: translateY(calc(var(--d) * 112px))
     translateZ(calc(72px - abs(var(--d)) * 112px))
     rotateX(calc(var(--d) * -7deg));
   opacity: calc(1 - min(abs(var(--d)) * 0.34, 1));
@@ -447,7 +473,7 @@ button {
 .card-inner {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 7px;
   animation: floaty 5s ease-in-out infinite;
 }
 
@@ -457,34 +483,34 @@ button {
 }
 
 .card-idx {
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.22em;
   opacity: 0.6;
 }
 
 .card-title {
-  font-size: clamp(14px, 1.1vw, 16px);
+  font-size: clamp(15px, 1.25vw, 19px);
   text-shadow: 0 0 8px var(--glow);
   overflow-wrap: anywhere;
 }
 
 .card-desc {
-  font-size: 11.5px;
-  line-height: 1.45;
+  font-size: 12.5px;
+  line-height: 1.5;
   opacity: 0.8;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   overflow: hidden;
 }
 
 .card-badge {
   align-self: flex-end;
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.2em;
   border: 1px solid color-mix(in srgb, var(--phosphor) 40%, transparent);
   border-radius: 4px;
-  padding: 2px 5px;
+  padding: 2px 6px;
   opacity: 0.75;
 }
 
@@ -509,7 +535,7 @@ button {
   }
 
   .console {
-    padding: 22px 20px;
+    padding: 22px 20px 150px;
     font-size: 12.5px;
   }
 
@@ -523,7 +549,7 @@ button {
   }
 
   .carousel-wrap {
-    height: 168px;
+    height: 205px;
   }
 
   .carousel {
@@ -531,20 +557,35 @@ button {
   }
 
   .card {
-    width: min(60vw, 240px);
-    padding: 10px 12px;
-    transform: translateX(calc(var(--d) * 92px))
+    width: min(68vw, 270px);
+    padding: 14px 16px;
+    transform: translateX(calc(var(--d) * 106px))
       translateZ(calc(52px - abs(var(--d)) * 108px))
       rotateY(calc(var(--d) * 11deg));
   }
 
   .card-desc {
-    -webkit-line-clamp: 1;
-    font-size: 10.5px;
+    -webkit-line-clamp: 2;
+    font-size: 11.5px;
   }
 
   .card-inner {
     animation-duration: 4s;
+  }
+
+  .mascot svg {
+    width: clamp(95px, 26vw, 125px);
+  }
+
+  /* En pantallas pequeñas pasa a ser marca de agua tras el texto */
+  .mascot {
+    z-index: -1;
+    right: 14px;
+    bottom: 10px;
+  }
+
+  .mascot.on {
+    opacity: 0.85;
   }
 
   .arrow {
@@ -587,10 +628,12 @@ button {
   .fx-sweep,
   .card::after,
   .card-inner,
+  .mascot svg,
   .cursor {
     animation: none !important;
   }
 
+  .mascot,
   .card,
   .bezel-btn,
   .arrow {

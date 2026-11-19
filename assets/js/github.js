@@ -43,12 +43,14 @@ export function repoToProject(user, repo) {
 }
 
 /**
- * Devuelve los proyectos Pages detectados. Lanza un error si la API
- * no responde; el llamador decide si cae a la lista manual.
+ * Devuelve los proyectos Pages detectados y el total de repos
+ * públicos del usuario. Lanza un error si la API no responde; el
+ * llamador decide si cae a la lista manual.
  *
  * @param {string} user nombre de usuario de GitHub.
- * @returns {Promise<Array<object>>} proyectos detectados (ordenados
- * por actualización, tal como los devuelve la API).
+ * @returns {Promise<{ projects: Array<object>, repoCount: number }>}
+ *   proyectos con Pages activas (ordenados por actualización, tal
+ *   como los devuelve la API) y número total de repos públicos.
  */
 export async function fetchGithubProjects(user) {
   const controller = new AbortController();
@@ -61,9 +63,10 @@ export async function fetchGithubProjects(user) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const repos = await res.json();
     if (!Array.isArray(repos)) throw new Error('respuesta inesperada');
-    return repos
+    const projects = repos
       .filter((repo) => repo.has_pages && !isLobbyRepo(user, repo))
       .map((repo) => repoToProject(user, repo));
+    return { projects, repoCount: repos.length };
   } finally {
     clearTimeout(timer);
   }

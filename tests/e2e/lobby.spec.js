@@ -60,7 +60,12 @@ test('arranca con los datos del usuario y el cursor visible', async ({ page }) =
 test('lista pages detectadas y manuales, sin el propio lobby', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('.card')).toHaveCount(TOTAL, { timeout: TYPING_TIMEOUT });
-  await expect(page.locator('#console')).not.toContainText('Axgaldo.github.io');
+  // El lobby nunca se lista a sí mismo como proyecto…
+  await expect(page.locator('#console-project')).not.toContainText('Axgaldo.github.io');
+  // …pero sí está enlazado en la línea de código de la consola.
+  await expect(page.locator('#console-boot')).toContainText('github.com/AxGaldo/Axgaldo.github.io', {
+    timeout: TYPING_TIMEOUT,
+  });
 });
 
 test('al cambiar de proyecto la consola se reescribe', async ({ page }) => {
@@ -101,14 +106,15 @@ test('flechas móviles cambian de proyecto', async ({ page }) => {
 
 test('el botón de fósforo alterna y persiste', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('html')).toHaveAttribute('data-phosphor', 'white');
-
-  await page.locator('#phosphor-btn').click();
   await expect(page.locator('html')).toHaveAttribute('data-phosphor', 'green');
   await expect(page.locator('#phosphor-btn')).toHaveAttribute('aria-pressed', 'true');
 
+  await page.locator('#phosphor-btn').click();
+  await expect(page.locator('html')).toHaveAttribute('data-phosphor', 'white');
+  await expect(page.locator('#phosphor-btn')).toHaveAttribute('aria-pressed', 'false');
+
   await page.reload();
-  await expect(page.locator('html')).toHaveAttribute('data-phosphor', 'green');
+  await expect(page.locator('html')).toHaveAttribute('data-phosphor', 'white');
 });
 
 test('cae a la lista manual si la API no responde', async ({ page }) => {
