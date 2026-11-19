@@ -3,6 +3,16 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/),
 versionado con [SemVer](https://semver.org/lang/es/).
 
+## [1.2.1] — 2026-11-19
+
+### Fixed
+
+- Los proyectos manuales que coinciden con uno detectado
+  automáticamente (misma URL) ya no tapan los datos de la API: ahora
+  se marcan como "fijado" y heredan lenguaje, topics y fecha de
+  actualización, por lo que la línea `tecno` aparece también en los
+  proyectos fijados.
+
 ## [1.2.0] — 2026-11-19
 
 ### Added

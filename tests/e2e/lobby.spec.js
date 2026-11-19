@@ -16,6 +16,18 @@ const REPOS = [
     pushed_at: '2026-11-19T00:00:00Z',
   },
   {
+    // Coincide con el primer proyecto manual: debe fusionarse en un
+    // proyecto "fijado" que hereda lenguaje y topics.
+    name: 'chinese-vault',
+    has_pages: true,
+    description: 'Pages de chino simulada',
+    html_url: 'https://github.com/AxGaldo/chinese-vault',
+    homepage: null,
+    pushed_at: '2026-11-19T09:51:21Z',
+    language: 'TypeScript',
+    topics: ['hsk', 'chino'],
+  },
+  {
     name: 'Proyecto-Uno',
     has_pages: true,
     description: 'Pages uno de prueba',
@@ -96,6 +108,21 @@ test('muestra lenguaje y topics del proyecto', async ({ page }) => {
   await expect(block).toContainText('tecno', { timeout: TYPING_TIMEOUT });
   await expect(block).toContainText('TypeScript');
   await expect(block).toContainText('dbt');
+});
+
+test('los proyectos fijados heredan lenguaje y topics de la API', async ({ page }) => {
+  await page.goto('/');
+  // La primera tarjeta es el manual chinese-vault; el mock de la API
+  // devuelve el mismo repo, así que debe fusionarse como "fijado" y
+  // heredar lenguaje y topics.
+  await expect(page.locator('.card').first()).toContainText('FIJADO', {
+    timeout: TYPING_TIMEOUT,
+  });
+  const block = page.locator('#console-project');
+  await expect(block).toContainText('github pages (fijado)', { timeout: TYPING_TIMEOUT });
+  await expect(block).toContainText('tecno', { timeout: TYPING_TIMEOUT });
+  await expect(block).toContainText('TypeScript');
+  await expect(block).toContainText('hsk');
 });
 
 test('el botón SOBRE MÍ escribe la bio y un proyecto la sustituye', async ({ page }) => {

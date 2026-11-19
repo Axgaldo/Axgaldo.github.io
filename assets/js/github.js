@@ -77,21 +77,41 @@ export async function fetchGithubProjects(user) {
 const normUrl = (url) => String(url).toLowerCase().replace(/\/+$/, '').trim();
 const normTitle = (title) => String(title).toLowerCase().replace(/[\s._-]+/g, '-').trim();
 
+const projectKey = (project) =>
+  project.url ? normUrl(project.url) : normTitle(project.title);
+
 /**
  * Fusiona manuales y automáticos sin duplicados. Los manuales van
- * primero (quedan "fijados"); se deduplica por URL (o por título si
- * no hay URL). Las entradas inválidas se descartan.
+ * primero (quedan "fijados"). Si un manual coincide con un
+ * proyecto detectado (por URL, o por título si no hay URL), el
+ * manual conserva su título y descripción pero **hereda** los datos
+ * de la API: lenguaje, topics, fecha de actualización… (se marca con
+ * `pinned: true`). Las entradas inválidas se descartan.
  *
  * @param {Array<object>} manual proyectos añadidos a mano.
  * @param {Array<object>} auto proyectos detectados vía API.
  * @returns {Array<object>} lista final para el lobby.
  */
 export function mergeProjects(manual = [], auto = []) {
+  const autoByKey = new Map();
+  for (const project of auto ?? []) {
+    if (!project || typeof project.title !== 'string' || !project.title.trim()) continue;
+    autoByKey.set(projectKey(project), project);
+  }
+
   const seen = new Set();
   const out = [];
-  for (const project of [...(manual ?? []), ...(auto ?? [])]) {
+  for (const project of manual ?? []) {
     if (!project || typeof project.title !== 'string' || !project.title.trim()) continue;
-    const key = project.url ? normUrl(project.url) : normTitle(project.title);
+    const key = projectKey(project);
+    const match = autoByKey.get(key);
+    const merged = match ? { ...match, ...project, pinned: true } : { ...project };
+    if (!merged.description && match?.description) merged.description = match.description;
+    out.push(merged);
+    seen.add(key);
+  }
+  for (const project of autoByKey.values()) {
+    const key = projectKey(project);
     if (seen.has(key)) continue;
     seen.add(key);
     out.push(project);

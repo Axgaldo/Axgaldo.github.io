@@ -46,9 +46,11 @@ Edita `MANUAL_PROJECTS` en `assets/js/data.js`:
 },
 ```
 
-Si el proyecto coincide por URL con uno detectado, manda el manual.
-Si prefieres listar **solo** los manuales, pon `autoDetect: false`
-en el mismo archivo.
+Si un proyecto manual coincide por URL con uno detectado, se fusiona:
+conserva el título y descripción que escribiste a mano, se marca como
+**fijado** (primero en el carrusel) y **hereda** lenguaje, topics y
+fecha del repo real. Si prefieres listar **solo** los manuales, pon
+`autoDetect: false` en el mismo archivo.
 
 > Los repos **privados** con Pages no salen en la API pública:
 > añádelos a mano.

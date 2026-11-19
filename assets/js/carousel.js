@@ -95,7 +95,11 @@ export class Carousel {
 
     const badge = document.createElement('span');
     badge.className = 'card-badge';
-    badge.textContent = project.kind === 'manual' ? 'MANUAL' : 'AUTO';
+    badge.textContent = project.pinned
+      ? 'FIJADO'
+      : project.kind === 'manual'
+        ? 'MANUAL'
+        : 'AUTO';
 
     const inner = document.createElement('span');
     inner.className = 'card-inner';

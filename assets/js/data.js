@@ -5,7 +5,7 @@
 
 export const SITE = {
   /** Versión del lobby (se muestra en el arranque de la consola). */
-  version: '1.2.0',
+  version: '1.2.1',
 
   title: 'AxGaldo · Lobby CRT',
 

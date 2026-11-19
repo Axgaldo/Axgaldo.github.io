@@ -81,16 +81,53 @@ describe('mergeProjects', () => {
     expect(mergeProjects([manual], [auto])).toEqual([manual, auto]);
   });
 
+  it('un manual que coincide hereda los datos del detectado y se marca fijado', () => {
+    const manual = {
+      kind: 'manual',
+      title: 'chinese-vault',
+      description: 'La mía, curada a mano',
+      url: 'https://axgaldo.github.io/chinese-vault/',
+    };
+    const auto = {
+      kind: 'auto',
+      title: 'chinese-vault',
+      description: 'La de la API',
+      url: 'https://axgaldo.github.io/chinese-vault/',
+      language: 'TypeScript',
+      topics: ['hsk'],
+      updatedAt: '2026-11-19',
+    };
+    const [merged] = mergeProjects([manual], [auto]);
+    expect(merged).toMatchObject({
+      kind: 'manual',
+      pinned: true,
+      title: 'chinese-vault',
+      description: 'La mía, curada a mano',
+      language: 'TypeScript',
+      topics: ['hsk'],
+      updatedAt: '2026-11-19',
+    });
+  });
+
+  it('un manual sin par detectado no se marca como fijado', () => {
+    const manual = { kind: 'manual', title: 'x', url: 'https://x.example/' };
+    const [merged] = mergeProjects([manual], []);
+    expect(merged.pinned).toBeUndefined();
+  });
+
   it('deduplica por URL aunque difieran mayúsculas y barras finales', () => {
     const manual = { kind: 'manual', title: 'a', url: 'https://axgaldo.github.io/Foo/' };
     const auto = { kind: 'auto', title: 'Foo', url: 'https://axgaldo.github.io/foo' };
-    expect(mergeProjects([manual], [auto])).toEqual([manual]);
+    const [merged] = mergeProjects([manual], [auto]);
+    expect(merged).toMatchObject({ kind: 'manual', title: 'a', pinned: true });
+    expect(mergeProjects([manual], [auto])).toHaveLength(1);
   });
 
   it('deduplica por título si no hay URL', () => {
     const manual = { kind: 'manual', title: 'Mi Proyecto' };
     const auto = { kind: 'auto', title: 'mi proyecto' };
-    expect(mergeProjects([manual], [auto])).toEqual([manual]);
+    expect(mergeProjects([manual], [auto])).toHaveLength(1);
+    expect(mergeProjects([manual], [auto])[0].kind).toBe('manual');
   });
 
   it('descarta entradas sin título', () => {

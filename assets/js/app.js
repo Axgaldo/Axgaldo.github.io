@@ -126,7 +126,11 @@ function projectLines(project, index, total) {
     line(
       text(
         `  origen       : ${
-          project.kind === 'manual' ? 'proyecto personal' : 'github pages (auto)'
+          project.pinned
+            ? 'github pages (fijado)'
+            : project.kind === 'manual'
+              ? 'proyecto personal'
+              : 'github pages (auto)'
         }`,
       ),
     ),
