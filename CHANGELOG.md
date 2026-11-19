@@ -3,6 +3,16 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/),
 versionado con [SemVer](https://semver.org/lang/es/).
 
+## [1.2.2] — 2026-11-19
+
+### Changed
+
+- Escritura casi el doble de rápida (~7 ms por carácter) para que
+  las descripciones y tecno aparezcan antes.
+- Sonido de teletipo más realista: cada tecla es un clic seco
+  (ráfaga de ruido filtrado) con un golpe grave sutil, en lugar del
+  pitido cuadrado anterior.
+
 ## [1.2.1] — 2026-11-19
 
 ### Fixed

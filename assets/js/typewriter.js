@@ -18,7 +18,7 @@ const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
  *   se dispara con cada carácter escrito (p. ej. para el sonido).
  */
 export class Typewriter {
-  constructor(root, { baseDelay = 10, jitter = 8, onCharacter } = {}) {
+  constructor(root, { baseDelay = 5, jitter = 4, onCharacter } = {}) {
     this.baseDelay = baseDelay;
     this.jitter = jitter;
     this.onCharacter = typeof onCharacter === 'function' ? onCharacter : null;
